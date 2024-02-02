@@ -1,0 +1,683 @@
+1#INDEX ROUTE(To see all posts stored in posts array)
+#index.js file
+const express = require ("express")
+const app = express();
+const port = 8080;
+const path=require("path");
+app.use(express.urlencoded({extended:true}));
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+app.use(express.static(path.join(__dirname,"public")));
+
+let posts=[{            //making posts array to store data
+    username:"chetan",
+    content:"hard working"
+},
+{
+    username:"doli",
+    content:"doctor "
+},
+{
+    username:"alka",
+    content:"house making"
+}
+]
+
+app.get("/posts",(req,res)=>{
+    res.render("index.ejs",{posts});
+})
+app.listen(port,()=>{
+    console.log("listening to port");
+});
+
+#index.ejs file 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quora posts</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <h1>gapshup</h1>
+    <% for(post of posts){%>
+        <div class="div">
+            <h3 class="user">@username: <%= post.username%></h3>
+            <h3 class="content">@content: <%= post.content%></h3>
+        </div>
+
+   <% }%>
+    
+</body>
+</html>
+#style.css file
+h1{
+    color: maroon;
+}
+.user{
+    background-color: blanchedalmond;
+}
+.content{
+    font-style: italic;
+}
+
+2# CREATE AND NEW ROUTE(Used to create a new post and updateit on home page)
+#index.js file
+const express = require ("express");
+
+const app = express();
+const port = 8080;
+const path=require("path");
+
+app.use(express.urlencoded({extended:true}));
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+app.use(express.static(path.join(__dirname,"public")));
+
+let posts=[{
+    username:"chetan",
+    content :"hard working"
+},
+{
+    username:"doli",
+    content:"doctor "
+},
+{
+    username:"alka",
+    content:"house making"
+}
+]
+
+app.get("/posts",(req,res)=>{
+    res.render("index.ejs",{posts});
+    
+});
+
+app.get("/posts/new",(req,res)=>{
+        res.render("new.ejs");
+
+});
+
+
+
+app.post("/posts",(req,res)=>{
+    let{username,content} = req.body;
+    posts.push({username,content});
+    
+    res.send("post request working");
+});
+
+
+app.listen(port,()=>{
+    console.log("listening to port");
+});
+
+#new.ejs file
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>create new post</title>
+</head>
+<body>
+    <form method="post" action="/posts">
+        <input placeholder="username" name="username"/><br>
+        <textarea placeholder="write your content" name="content"></textarea><br>
+ <button>submit</button>
+    </form>
+    
+</body>
+
+#index.ejs file willbe same as previous
+#style.css file will be same as previous
+
+3#REDIRECT ROUTE
+#index.js file
+const express = require ("express");
+
+const app = express();
+const port = 8080;
+const path=require("path");
+
+app.use(express.urlencoded({extended:true}));
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+app.use(express.static(path.join(__dirname,"public")));
+
+let posts=[{
+    username:"chetan",
+    content :"hard working"
+},
+{
+    username:"doli",
+    content:"doctor "
+},
+{
+    username:"alka",
+    content:"house making"
+}
+]
+
+app.get("/posts",(req,res)=>{
+    res.render("index.ejs",{posts});
+    
+});
+
+app.get("/posts/new",(req,res)=>{
+        res.render("new.ejs");
+
+});
+
+
+
+app.post("/posts",(req,res)=>{
+    let{username,content} = req.body;
+    posts.push({username,content});
+    
+    res.redirect("/posts"); //used to redirect the req to another API(page)
+});
+
+
+app.listen(port,()=>{
+    console.log("listening to port");
+});
+
+#index.ejs file
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quora posts</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <h1>gapshup</h1>
+    <% for(post of posts){%>
+        <div class="post">
+            <h3 class="user">@username: <%= post.username%></h3>
+            <h3 class="content">@content: <%= post.content%></h3>
+        </div>
+
+   <% }%>
+
+   <a href="http://localhost:8080/posts/new"> create new post </a>
+    
+</body>
+</html>
+
+#style.css file will be same as previous
+#new.ejs file will be same as previous
+
+#4SHOW ROUTE
+index.js file
+
+const express = require ("express");
+
+const app = express();
+const port = 8080;
+const path=require("path");
+
+app.use(express.urlencoded({extended:true}));
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+app.use(express.static(path.join(__dirname,"public")));
+
+let posts=[{
+    id:"1a",
+    username:"chetan",
+    content :"hard working"
+},
+{
+    id:"2b",
+    username:"doli",
+
+    content:"doctor "
+},
+{
+    id:"3c",
+    username:"alka",
+    content:"house making"
+}
+]
+
+app.get("/posts",(req,res)=>{
+    res.render("index.ejs",{posts});
+    
+});
+
+app.get("/posts/new",(req,res)=>{
+        res.render("new.ejs");
+
+});
+
+
+
+app.post("/posts",(req,res)=>{
+    let{username,content} = req.body;
+    posts.push({username,content});
+    
+    res.redirect("/posts"); //used to redirect the req to another API(page)
+});
+
+app.get("/posts/:id",(req,res)=>{
+     let{id}=req.params; //getting id from req.params(req. ke parameters) and storing in id variable
+     let post=posts.find((p)=> id==p.id); //posts me find kro ki kis post ki id id se match ho rhi h 
+     res.render("show.ejs",{post}); //us post ki data ko show.ejs template me bhejo
+     
+});
+
+
+app.listen(port,()=>{
+    console.log("listening to port");
+});
+
+#show.ejs file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>post in detail</title>
+    
+</head>
+<body>
+    <h2>Here is your post in detail</h2>
+    <p>post id: <%= post.id %></p>
+    <div class="post">
+        <h3 class="user">@<%= post.username %></h3>
+        <h4><%= post.content %></h4>
+    </div>
+</body>
+</html>
+
+#index.ejs file
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quora posts</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <h1>Quora posts</h1>
+    <% for(post of posts){%>
+        <div class="post">
+            <h3 class="username">@username: <%= post.username%></h3>
+            <h3 class="content">@content: <%= post.content%></h3>
+<br>
+<a href="http://localhost:8080/posts/<%=post.id%>">see in detail</a>
+        </div>
+
+   <% }%>
+
+   <a href="http://localhost:8080/posts/new"> create new post </a>
+    
+</body>
+</html>
+#all files remain same
+
+#CREATING DIFFERENT IDS USING UUID PACKAGE
+
+index.js
+const express = require ("express");
+
+const app = express();
+const port = 8080;
+const path=require("path");
+const { v4: uuidv4 } = require('uuid');
+ // requiring uuid package
+
+app.use(express.urlencoded({extended:true}));
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+app.use(express.static(path.join(__dirname,"public")));
+
+let posts=[{
+    id:uuidv4(), //writing this uuid function to create unique id
+    username:"chetan",
+    content :"hard working"
+},
+{
+    id:uuidv4(),
+    username:"doli",
+
+    content:"doctor "
+},
+{
+    id:uuidv4(),
+    username:"alka",
+    content:"house making"
+}
+]
+
+app.get("/posts",(req,res)=>{
+    res.render("index.ejs",{posts});
+    res.render("style.css");
+});
+
+app.get("/posts/new",(req,res)=>{
+        res.render("new.ejs");
+
+});
+
+
+
+app.post("/posts",(req,res)=>{
+    let{username,content} = req.body;
+    let id=uuidv4();
+    posts.push({id,username,content});
+    
+    res.redirect("/posts"); //used to redirect the req to another API(page)
+});
+
+app.get("/posts/:id",(req,res)=>{
+     let{id}=req.params;
+     let post=posts.find((p)=> id==p.id);
+     res.render("show.ejs",{post});
+     
+});
+
+
+app.listen(port,()=>{
+    console.log("listening to port");
+});
+
+index.ejs file
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quora posts</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <h1>Quora posts</h1>
+    <% for(post of posts){%>
+        <div class="post">
+            <h3 class="username">@id: <%= post.id%></h3>
+            <h3 class="username">@username: <%= post.username%></h3>
+            <h3 class="content">@content: <%= post.content%></h3>
+<br>
+<a href="http://localhost:8080/posts/<%=post.id%>">see in detail</a>
+        </div>
+
+   <% }%>
+
+   <a href="http://localhost:8080/posts/new"> create new post </a>
+    
+</body>
+</html>
+#all other files remain same 
+
+#5 EDIT ROUTE
+index.js file
+
+const express = require ("express");
+
+const app = express();
+const port = 8080;
+const path=require("path");
+const { v4: uuidv4 } = require('uuid');
+ // requiring uuid package
+ const methodoverride=require("method-override");
+//requiring method override
+app.use(express.urlencoded({extended:true}));
+app.use(methodoverride("_method"));//using method override
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+app.use(express.static(path.join(__dirname,"public")));
+
+let posts=[{
+    id:uuidv4(), //writing this uuid function to create unique id
+    username:"chetan",
+    content :"hard working"
+},
+{
+    id:uuidv4(),
+    username:"doli",
+
+    content:"doctor "
+},
+{
+    id:uuidv4(),
+    username:"alka",
+    content:"house making"
+}
+]
+
+app.get("/posts",(req,res)=>{
+    res.render("index.ejs",{posts});
+    res.render("style.css");
+});
+
+app.get("/posts/new",(req,res)=>{
+        res.render("new.ejs");
+
+});
+
+
+
+app.post("/posts",(req,res)=>{
+    let{username,content} = req.body;
+    let id=uuidv4();
+    posts.push({id,username,content});
+    
+    res.redirect("/posts"); //used to redirect the req to another API(page)
+});
+
+app.get("/posts/:id",(req,res)=>{
+     let{id}=req.params;
+     let post=posts.find((p)=> id==p.id);
+     res.render("show.ejs",{post});
+     
+});
+
+app.patch("/posts/:id",(req,res)=>{
+    let{id}=req.params;
+    
+    let newcontent=req.body.content;
+    let post=posts.find((p)=> id==p.id);
+    post.content=newcontent;
+    console.log(post);
+    res.redirect("/posts");
+    
+
+});
+
+app.get("/posts/:id/edit",(req,res)=>{
+    let{id}=req.params; //getting id
+    let post=posts.find((p)=> id==p.id);
+    res.render("edit.ejs",{post});//rendering edit.ejs file which provide form to edit content
+});
+
+
+app.listen(port,()=>{
+    console.log("listening to port");
+});
+
+edit.ejs file
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit post</title>
+</head>
+<body>
+    <h2>Edit your post</h2>
+    <p>post id:<%= post.id %></p>
+    <p>post username:<%= post.username %></p>
+    <form method="post" action="/posts/<%= post.id %>?_method=PATCH">
+<textarea name="content"><%= post.content %></textarea>
+<button>submit</button>
+    </form>
+    
+</body>
+</html>
+
+index.ejs file
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quora posts</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <h1>gapshup</h1>
+    <% for(post of posts){%>
+        <div class="post">
+            <h3 class="user">@id: <%= post.id%></h3>
+            <h3 class="user">@username: <%= post.username%></h3>
+            <h3 class="content">@content: <%= post.content%></h3>
+<br>
+<a href="http://localhost:8080/posts/<%=post.id%>">see in detail</a>
+<a href="http://localhost:8080/posts/<%= post.id %>/edit">Edit</a>
+        </div>
+
+   <% }%>
+   
+   <a href="http://localhost:8080/posts/new"> create new post </a>
+    
+</body>
+</html>
+edit.ejs file
+
+#6 DELETE ROUTE
+index.js file
+
+const express = require ("express");
+
+const app = express();
+const port = 8080;
+const path=require("path");
+const { v4: uuidv4 } = require('uuid');
+ // requiring uuid package
+ const methodoverride=require("method-override");
+//requiring method override
+app.use(express.urlencoded({extended:true}));
+app.use(methodoverride("_method"));//using method override
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+app.use(express.static(path.join(__dirname,"public")));
+
+let posts=[{
+    id:uuidv4(), //writing this uuid function to create unique id
+    username:"chetan",
+    content :"hard working"
+},
+{
+    id:uuidv4(),
+    username:"doli",
+
+    content:"doctor "
+},
+{
+    id:uuidv4(),
+    username:"alka",
+    content:"house making"
+}
+]
+
+app.get("/posts",(req,res)=>{
+    res.render("index.ejs",{posts});
+    res.render("style.css");
+});
+
+app.get("/posts/new",(req,res)=>{
+        res.render("new.ejs");
+
+});
+
+
+
+app.post("/posts",(req,res)=>{
+    let{username,content} = req.body;
+    let id=uuidv4();
+    posts.push({id,username,content});
+    
+    res.redirect("/posts"); //used to redirect the req to another API(page)
+});
+
+app.get("/posts/:id",(req,res)=>{
+     let{id}=req.params;
+     let post=posts.find((p)=> id==p.id);
+     res.render("show.ejs",{post});
+     
+});
+
+app.patch("/posts/:id",(req,res)=>{
+    let{id}=req.params;
+    
+    let newcontent=req.body.content;
+    let post=posts.find((p)=> id==p.id);
+    post.content=newcontent;
+    console.log(post);
+    res.redirect("/posts");
+    
+
+});
+
+app.get("/posts/:id/edit",(req,res)=>{
+    let{id}=req.params; //getting id
+    let post=posts.find((p)=> id==p.id);
+    res.render("edit.ejs",{post});//rendering edit.ejs file which provide form to edit content
+});
+
+app.delete("/posts/:id",(req,res)=>{
+    let{id}=req.params; //getting id
+     posts=posts.filter((p)=> id!==p.id);//filtering those posts which dont
+     //have ids equal to post id
+    res.redirect("/posts");
+});
+
+
+app.listen(port,()=>{
+    console.log("listening to port");
+});
+
+index.ejs file
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quora posts</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <h1>gapshup</h1>
+    <% for(post of posts){%>
+        <div class="post">
+            <h3 class="user">@id: <%= post.id%></h3>
+            <h3 class="user">@username: <%= post.username%></h3>
+            <h3 class="content">@content: <%= post.content%></h3>
+<br>
+<a href="http://localhost:8080/posts/<%=post.id%>">see in detail</a>
+<a href="http://localhost:8080/posts/<%= post.id %>/edit">Edit</a>
+<form method="post" action="/posts/<%= post.id %>?_method=DELETE">
+    <button>Delete post</button>
+</form>
+        </div>
+
+   <% }%>
+   
+   <a href="http://localhost:8080/posts/new"> create new post </a>
+    
+</body>
+</html>
+remaining all files are same
+
